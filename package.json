@@ -1,0 +1,27 @@
+{
+  "name": "@straylightagency/storage",
+  "version": "1.0.0",
+  "description": "Package to ease the use of the LocalStorage and SessionStorage with helpers functions",
+  "type": "module",
+  "main": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": false,
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [],
+  "author": "Anthony Pauwels (anthony@straylightagency.be)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/straylightagency/js-storage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/straylightagency/js-storage/issues"
+  },
+  "homepage": "https://github.com/straylightagency/js-storage#readme"
+}
