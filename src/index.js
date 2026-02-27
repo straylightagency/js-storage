@@ -124,9 +124,21 @@ class Storage {
     }
 }
 
+/**
+ * @type {Storage}
+ */
 export const sessionStorage = new Storage('session');
+
+/**
+ * @type {Storage}
+ */
 export const localStorage = new Storage('local');
 
+/**
+ * @param key {String}
+ * @param default_value {*}
+ * @returns {({value: undefined}|(function(*): void)|(function(): void))[]|*|undefined|boolean}
+ */
 export function useSessionStorage(key, default_value = undefined) {
     const proxy = new Proxy( {
         value: default_value,
@@ -145,6 +157,11 @@ export function useSessionStorage(key, default_value = undefined) {
     return [ proxy, setter, remove ];
 }
 
+/**
+ * @param key {String}
+ * @param default_value {*}
+ * @returns {({value: undefined}|(function(*): void)|(function(): void))[]|*|undefined|boolean}
+ */
 export function useLocalStorage(key, default_value = undefined) {
     const proxy = new Proxy( {
         value: default_value,
