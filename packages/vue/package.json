@@ -1,7 +1,7 @@
 {
   "name": "@straylightagency/storage-vue",
   "version": "1.1.0",
-  "description": "",
+  "description": "A lightweight JavaScript utility to simplify working with the browser's localStorage and sessionStorage.",
   "type": "module",
   "main": "src/index.js",
   "exports": {
