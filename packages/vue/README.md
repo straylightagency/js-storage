@@ -270,9 +270,9 @@ Contributions, bug reports, and feature requests are welcome.
 4. Test the affected storage behavior in a browser.
 5. Submit a pull request.
 
-Repository: https://github.com/straylightagency/storage
+Repository: https://github.com/straylightagency/js-storage
 
-Report issues: https://github.com/straylightagency/storage/issues
+Report issues: https://github.com/straylightagency/js-storage/issues
 
 ## License
 
