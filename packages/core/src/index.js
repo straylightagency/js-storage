@@ -2,6 +2,7 @@
  * @author anthony@straylightagency.be
  */
 class Storage {
+    /** @type Storage */
     #storage;
 
     /**
@@ -21,7 +22,7 @@ class Storage {
      * @returns {boolean}
      */
     has(key) {
-        return this.#storage.getItem( key ) !== undefined
+        return this.#storage.getItem( key ) !== null;
     }
 
     /**
@@ -37,12 +38,16 @@ class Storage {
      * Get the item for the given key or return the default value
      *
      * @param key
-     * @param default_value
+     * @param initial
      * @returns {undefined|any}
      */
-    get(key, default_value = undefined) {
+    get(key, initial = undefined) {
         const decode = value => {
-            if ( ( value?.length || 0 ) < 10 ) {
+            if ( value === null ) {
+                return undefined;
+            }
+
+            if ( value.length < 9 ) {
                 return undefined;
             }
 
@@ -74,11 +79,11 @@ class Storage {
 
         const value = decode( this.#storage.getItem( key ) );
 
-        if ( value ) {
+        if (value !== undefined) {
             return value;
         }
 
-        return default_value;
+        return initial;
     }
 
     /**
@@ -136,46 +141,76 @@ export const localStorage = new Storage('local');
 
 /**
  * @param key {String}
- * @param default_value {*}
+ * @param initial {*}
  * @returns {({value: undefined}|(function(*): void)|(function(): void))[]|*|undefined|boolean}
  */
-export function useSessionStorage(key, default_value = undefined) {
-    const proxy = new Proxy( {
-        value: default_value,
+export function fromSessionStorage(key, initial = undefined) {
+    const proxy = new Proxy({
+        value: initial,
     }, {
-        set(target, prop, value) {
-            return false;
+        get(target, prop, receiver) {
+            if (prop === 'value') {
+                return sessionStorage.get(key, initial);
+            }
+
+            return Reflect.get(target, prop, receiver);
         },
-        get(target, prop) {
-            return sessionStorage.get( key, default_value );
+
+        set(target, prop, value, receiver) {
+            if (prop === 'value') {
+                sessionStorage.set(key, value);
+                return true;
+            }
+
+            return Reflect.set(target, prop, value, receiver);
         }
-    } );
+    });
 
-    const setter = new_value => sessionStorage.set( key, new_value );
-    const remove = () => sessionStorage.remove( key );
+    const setter = new_value => {
+        sessionStorage.set(key, new_value);
+    };
 
-    return [ proxy, setter, remove ];
+    const remove = () => {
+        sessionStorage.remove(key);
+    };
+
+    return [proxy, setter, remove];
 }
 
 /**
  * @param key {String}
- * @param default_value {*}
+ * @param initial {*}
  * @returns {({value: undefined}|(function(*): void)|(function(): void))[]|*|undefined|boolean}
  */
-export function useLocalStorage(key, default_value = undefined) {
-    const proxy = new Proxy( {
-        value: default_value,
+export function fromLocalStorage(key, initial = undefined) {
+    const proxy = new Proxy({
+        value: initial,
     }, {
-        set(target, prop, value) {
-            return false;
+        get(target, prop, receiver) {
+            if (prop === 'value') {
+                return localStorage.get(key, initial);
+            }
+
+            return Reflect.get(target, prop, receiver);
         },
-        get(target, prop) {
-            return localStorage.get( key, default_value );
+
+        set(target, prop, value, receiver) {
+            if (prop === 'value') {
+                localStorage.set(key, value);
+                return true;
+            }
+
+            return Reflect.set(target, prop, value, receiver);
         }
-    } );
+    });
 
-    const setter = new_value => localStorage.set( key, new_value );
-    const remove = () => localStorage.remove( key );
+    const setter = new_value => {
+        localStorage.set(key, new_value);
+    };
 
-    return [ proxy, setter, remove ];
+    const remove = () => {
+        localStorage.remove(key);
+    };
+
+    return [proxy, setter, remove];
 }
